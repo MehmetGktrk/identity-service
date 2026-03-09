@@ -1,26 +1,37 @@
 const config = require('../config/config');
 const { MongoClient } = require('mongodb');
 
-let dbClient;
+let dbClient = null;
+let dbInstance = null;
 
 
 async function connectDB() {
     if(!dbClient){
-        const client = new MongoClient(config.mongoURI);
-        await client.connect();
-        dbClient = client;
-        console.log('Connected Database');
+        try {
+            const client = new MongoClient(config.mongoURI);
+
+            await client.connect();
+
+            dbClient = client;
+            dbInstance = client.db(config.databaseName);
+
+            console.log('Connected Database');
+        } catch (err) {
+            console.error('Failed To Connect Database: ' + err);
+            process.exit(1);
+        }
+        
     }
-    return dbClient;
+    return dbInstance;
 }
 
 
 function getDB(){
-    if(!dbClient){
-        throw new Error('Database Not Connected, First Connect to Database');
+    if(!dbInstance){
+        throw new Error('Database Not Connected, Call connectDB first.');
     }
     
-    return dbClient.db(config.databaseName);
+    return dbInstance;
 }
 
 module.exports = { connectDB, getDB }

@@ -8,6 +8,7 @@ const { connectDB } = require('./database/connection');
 async function startServer() {
     try {
         await connectDB();
+        
         app.listen(config.port, () => {
             console.log(`Server Started At: http://localhost:${config.port}/`)
         })
