@@ -3,7 +3,8 @@ const authService = require("./auth.service");
 
 exports.register = async(req, res, next) => {
     try {
-        const user = await authService.registerUser(req.body);
+        const { email, password } = req.body;
+        const user = await authService.registerUser(email, password);
         
         return res.status(201).json({
             success: true,
@@ -17,7 +18,9 @@ exports.register = async(req, res, next) => {
 
 exports.login = async(req, res, next) => {
     try {
-        const jwtToken = await authService.loginUser(req.body);
+        const { email, password } = req.body;
+
+        const jwtToken = await authService.loginUser(email, password);
 
         return res.status(200).json({
             success: true,

@@ -6,9 +6,7 @@ const { generateAccessToken, generateRefreshToken, verifyRefreshToken } = requir
 
 
 
-exports.registerUser = async(userData) => {
-    
-    const { email, password } = userData;
+exports.registerUser = async(email, password) => {
 
     const existingUser = await authRepository.findUserByEmail(email);
     
@@ -30,9 +28,8 @@ exports.registerUser = async(userData) => {
     return result;
 }
 
-exports.loginUser = async(userData) => {
-    const { email, password } = userData;
-
+exports.loginUser = async(email, password) => {
+    
     const user = await authRepository.findUserByEmail(email);
 
     if(!user){
