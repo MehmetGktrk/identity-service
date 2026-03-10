@@ -18,12 +18,12 @@ exports.register = async(req, res, next) => {
 
 exports.login = async(req, res, next) => {
     try {
-        const user = await authService.loginUser(req.body);
+        const jwtToken = await authService.loginUser(req.body);
 
         return res.status(200).json({
             success: true,
             message: 'Authentication successful',
-            data: user
+            jwtToken: jwtToken
         });
     } catch (err) {
         return next(err);

@@ -15,6 +15,8 @@ Thumbs.db
 dist/
 build/
 
+toDo/
+
 # other temporary files
 *.swp
 *.swo

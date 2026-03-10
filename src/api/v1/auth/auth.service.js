@@ -1,6 +1,7 @@
 const ApiError = require('../../../utils/apiError');
 const authRepository = require('./auth.repository');
 const bcrypt = require('bcrypt');
+const { generateToken } = require("../../../utils/jwt")
 
 
 
@@ -44,6 +45,12 @@ exports.loginUser = async(userData) => {
         throw new ApiError(401, "INVALID_CREDENTIALS ", 'Invalid Email or Password');
     }
 
-    return user;
+    const jwtPayload = {
+        id: user._id.toString(),
+    }
+
+    const jwt = await generateToken({jwtPayload});
+
+    return jwt;
 }
 
