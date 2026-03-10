@@ -2,12 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
-const databaseMiddleware = require('./middlewares/databaseMiddleware');
-
-
-
-
-
+const authRoutes = require("./api/v1/auth/auth.routes");
 
 
 const app = express();
@@ -15,10 +10,11 @@ const app = express();
 
 app.use(cors());
 
-app.use(bodyParser.json());
+app.use(express.json());
 
-app.use(databaseMiddleware);
+app.use("/api/v1/auth", authRoutes);
 
 
 
-module.exports = app;
+
+module.exports = app;   
