@@ -14,9 +14,13 @@ async function generateToken(payload) {
 
 
 
-
-
 async function verifyToken(token) {
     const decoded = jwt.verify(token, config.jwtSecret);
     return decoded;
+}
+
+
+module.exports = {
+    generateToken,
+    verifyToken
 }
