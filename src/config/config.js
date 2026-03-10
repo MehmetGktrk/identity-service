@@ -8,6 +8,8 @@ module.exports = {
     jwtAccessSecret: process.env.JWT_ACCESS_SECRET,
     jwtAccessExpiration: "15m",
     jwtRefreshSecret: process.env.JWT_REFRESH_SECRET,
-    jwtRefreshExpiration: "7d"
+    jwtRefreshExpiration: "7d",
+
+    maxSession: 3
 
 }
