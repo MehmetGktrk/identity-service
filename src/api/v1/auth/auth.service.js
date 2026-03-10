@@ -1,7 +1,8 @@
 const ApiError = require('../../../utils/apiError');
 const authRepository = require('./auth.repository');
+const refreshTokenRepository = require('./refreshToken.repository');
 const bcrypt = require('bcrypt');
-const { generateToken } = require("../../../utils/jwt")
+const { generateAccessToken, generateRefreshToken, verifyRefreshToken } = require("../../../utils/jwt")
 
 
 
@@ -29,7 +30,6 @@ exports.registerUser = async(userData) => {
     return result;
 }
 
-
 exports.loginUser = async(userData) => {
     const { email, password } = userData;
 
@@ -49,8 +49,45 @@ exports.loginUser = async(userData) => {
         id: user._id.toString(),
     }
 
-    const jwt = await generateToken({jwtPayload});
+    const accessToken = generateAccessToken(jwtPayload);
+    const refreshToken = generateRefreshToken(jwtPayload);
 
-    return jwt;
+    await refreshTokenRepository.saveRefreshToken(user._id.toString(), refreshToken);
+
+    return {
+        user: user._id.toString(),
+        accessToken: accessToken,
+        refreshToken: refreshToken
+    };
+};
+
+exports.refreshToken = async(token) => {
+    
+    if(!token){
+        throw new ApiError(401, "REFRESH_TOKEN_REQUIRED", "Refresh token required");
+    }
+
+    const storedToken = await refreshTokenRepository.findRefreshToken(token);
+
+    if(!storedToken){
+        throw new ApiError(401, "INVALID_REFRESH_TOKEN", "Invalid refresh token");
+    }
+
+    const decoded = verifyRefreshToken(token);
+
+    const accessToken = generateAccessToken({ id: decoded.id });
+
+    return accessToken;    
+}
+
+exports.logout = async(refreshToken) => {
+    
+    if(!refreshToken){
+        throw new ApiError(400, "TOKEN_REQUIRED", "Refresh token required");
+    }
+
+    await refreshTokenRepository.deleteRefreshToken(refreshToken);
+
+    return true;
 }
 

@@ -15,7 +15,6 @@ exports.register = async(req, res, next) => {
     }
 }
 
-
 exports.login = async(req, res, next) => {
     try {
         const jwtToken = await authService.loginUser(req.body);
@@ -25,6 +24,37 @@ exports.login = async(req, res, next) => {
             message: 'Authentication successful',
             jwtToken: jwtToken
         });
+    } catch (err) {
+        return next(err);
+    }
+}
+
+exports.refresh = async(req, res, next) => {
+    try {
+        const { refreshToken } = req.body;
+        
+        const token = await authService.refreshToken(refreshToken);
+
+        return res.status(200).json({
+            success: true,
+            token: token
+        });
+
+    } catch (err) {
+        next(err);
+    }
+}
+
+exports.logout = async(req, res, next) => {
+    try {
+        const { refreshToken } = req.body;
+
+        await authService.logout(refreshToken);
+
+        return res.status(200).json({
+            success: true,
+            message: 'Logout successful'
+        })
     } catch (err) {
         return next(err);
     }
