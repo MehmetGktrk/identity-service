@@ -11,7 +11,7 @@ exports.registerUser = async(userData) => {
     const existingUser = await authRepository.findUserByEmail(email);
     
     if(existingUser){
-        throw new ApiError(400, 'User Already Exists');
+        throw new ApiError(400, "USER_ALREADY_EXISTS", 'User Already Exists');
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -35,13 +35,13 @@ exports.loginUser = async(userData) => {
     const user = await authRepository.findUserByEmail(email);
 
     if(!user){
-        throw new ApiError(401, 'Invalid Email or Password');
+        throw new ApiError(401, "INVALID_CREDENTIALS", 'Invalid Email or Password');
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if(!isPasswordValid){
-        throw new ApiError(401, 'Invalid Email or Password');
+        throw new ApiError(401, "INVALID_CREDENTIALS ", 'Invalid Email or Password');
     }
 
     return user;
