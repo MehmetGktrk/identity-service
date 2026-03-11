@@ -1,5 +1,5 @@
 const ApiError = require("../utils/apiError");
-const { verifyToken } = require("../utils/jwt");
+const { verifyToken, verifyAccessToken } = require("../utils/jwt");
 
 function authMiddleware(req, res, next) {
     
@@ -14,8 +14,8 @@ function authMiddleware(req, res, next) {
     const token = authHeader.split(" ")[1];
 
     try {
-        req.user = verifyToken(token)
 
+        req.user = verifyAccessToken(token)
         next()
 
     } catch (err) {

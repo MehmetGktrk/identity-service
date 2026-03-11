@@ -10,6 +10,8 @@ module.exports = {
     jwtRefreshSecret: process.env.JWT_REFRESH_SECRET,
     jwtRefreshExpiration: "7d",
 
-    maxSession: 3
+    maxSession: 3,
+
+    updateUserAllowedFields: ["name", "surname", "phone", "nickname"]
 
 }
